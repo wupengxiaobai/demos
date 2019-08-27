@@ -31,7 +31,7 @@ function Bock(left, top, isVisitable) {
     this.dom.style.height = this.height + 'px';
     this.dom.style.border = '1px solid #fff';
     this.dom.style.boxSizing = 'border-box';
-    this.dom.style.transition = '.3s linear';
+    this.dom.style.transition = '.15s linear';
     !isVisitable && (this.dom.style.display = "none");
     this.dom.style.background = `url('${gameConfig.imgUrl}') -${this.correctLeft}px -${this.correctTop}px`;
 
