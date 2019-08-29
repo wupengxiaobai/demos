@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>星级评分</title>
+    <style>
+        #starWrap {
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        #starWrap .stars img {
+            float: left;
+        }
+
+        #starWrap .text {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div id="starWrap">
+        <div class="stars">
+            <img src="images/empty.png" alt="">
+            <img src="images/empty.png" alt="">
+            <img src="images/empty.png" alt="">
+            <img src="images/empty.png" alt="">
+            <img src="images/empty.png" alt="">
+        </div>
+        <div class="text"></div>
+    </div>
+
+    <script>
+        ;
+        (function () {
+            var starsWrap = document.querySelector('#starWrap .stars'),
+                textWrap = document.querySelector('starWrap .text'),
+                starNum = 0, //  记录评分星星的数量
+                textArr = ['非常不满意', '不满意', '一般', '满意', '推荐'];
+            starsWrap.onmouseover = function (e) {
+                if (e.target.nodeName === 'IMG') {
+                    // 处理之前的
+                    e.target.src = './images/shining.png';
+                    var prev = e.target.previousElementSibling;
+                    while (prev) {
+                        prev.src = "./images/shining.png";
+                        prev = prev.previousElementSibling;
+                    }
+                    // 处理之后的
+                    var next = e.target.nextElementSibling;
+                    while (next) {
+                        next.src = "./images/empty.png";
+                        next = next.nextElementSibling;
+                    }
+                }
+            }
+            starsWrap.onclick = function (e) {
+                if (e.target.nodeName === 'IMG') {
+                    var index = Array.from(e.target.parentNode.children).indexOf(e.target);
+                    starNum = index + 1;
+                    textWrap.innerHTML = textArr[index];
+                }
+            }
+            starsWrap.onmouseleave = function () {
+                if (starNum <= 0) {
+                    for (var i = 0; i < starsWrap.children.length; i++) {
+                        starsWrap.children[i].src = "./images/empty.png";
+                    }
+                } else {
+                    for (var i = 0; i < starNum; i++) {
+                        starsWrap.children[i].src = "./images/shining.png";
+                    }
+                }
+            }
+        }());
+    </script>
+</body>
+
+</html>
