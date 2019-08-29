@@ -6,6 +6,7 @@ var gameConfig = {
     cols: 3,
     imgUrl: './img/lol.png',
     isOver: false,
+    easy: false, //  拼图是否开启可非相邻操作
     dom: document.getElementById('game')
 }
 
@@ -15,7 +16,12 @@ gameConfig.length = gameConfig.rows * gameConfig.cols;
 
 var blocks = []; //  保存小块的数组
 
-// 生成小块的构造函数
+/**
+ * 生成小块的构造函数
+ * @param {} left 小块初始left值
+ * @param {} top 小块初始top值
+ * @param {} isVisitable 小块初始isVisitable值 是否隐藏
+ * */
 function Bock(left, top, isVisitable) {
     this.left = left; //  小块当前的left
     this.top = top; //  小块当前的top
@@ -59,6 +65,9 @@ function init() {
     bindEvent()
 
 
+    /**
+     * 判断游戏是否结束
+     */
     function gameWin() {
         var winBlocks = blocks.filter(item => item.left === item.correctLeft && item.top === item.correctTop);
         if (winBlocks.length === gameConfig.length) {
@@ -73,6 +82,9 @@ function init() {
     }
 
 
+    /**
+     * 给每张拼图（除了空白）绑定点击事件
+     */
     function bindEvent() {
         var visitableBlock = blocks.find(item => !item.isVisitable);
 
@@ -83,30 +95,32 @@ function init() {
                     if (gameConfig.isOver) {
                         return;
                     }
-                    // 条件: 只有在相邻的情况下才可以交换位置
-                    if ((visitableBlock.left === blocks[i].left && tackIntegral(Math.abs(visitableBlock.top - blocks[i].top), gameConfig.blockHeight)) || (visitableBlock.top === blocks[i].top && tackIntegral(Math.abs(visitableBlock.left - blocks[i].left), gameConfig.blockWidth))) {
-                        // 交换白底块(最后一块)跟当前块的left和top位置
+                    if (!gameConfig.easy) {
+                        // 条件: 只有在相邻的情况下才可以交换位置
+                        if ((visitableBlock.left === blocks[i].left && tackIntegral(Math.abs(visitableBlock.top - blocks[i].top), gameConfig.blockHeight)) || (visitableBlock.top === blocks[i].top && tackIntegral(Math.abs(visitableBlock.left - blocks[i].left), gameConfig.blockWidth))) {
+                            // 交换白底块(最后一块)跟当前块的left和top位置
+                            transposition(visitableBlock, blocks[i]);
+                            // 判断是否完成拼图
+                            gameWin();
+                        }
+                    } else {
                         transposition(visitableBlock, blocks[i]);
-                        // 判断是否完成拼图
                         gameWin();
                     }
-
-                    /* transposition(visitableBlock, blocks[i]);
-                    gameWin(); */
-                    
                 }
             })(i);
         }
     }
 
-
+    /**
+     * 洗牌: 交换数组中当前 left 和 top 值
+     */
     function initShuffle() {
         for (var i = 0; i < blocks.length - 2; i++) {
             //  取出一位， 再随机取出一位， 交换left 和 top值
             var index = randomNum(0, blocks.length - 2);
             // 交换left, 交换 top
             transposition(blocks[i], blocks[index]);
-
             /* var temp = blocks[i].left;
             blocks[i].left = blocks[index].left;
             blocks[index].left = temp;
@@ -122,7 +136,9 @@ function init() {
         // console.log(blocks)
     }
 
-
+    /**
+     * 初始化保存小块的数组
+     */
     function initBlocksArray() {
         for (var i = 0; i < gameConfig.rows; i++) {
             for (var j = 0; j < gameConfig.cols; j++) {
@@ -136,6 +152,9 @@ function init() {
     };
 
 
+    /**
+     * 初始化外包容器样式
+     */
     function initWrapDom() {
         gameConfig.dom.style.width = gameConfig.width + 'px';
         gameConfig.dom.style.height = gameConfig.height + 'px';
@@ -161,7 +180,9 @@ function init() {
         b.show();
     }
 
-    // 取整对比
+    /**
+     * 取整对比
+     *  */
     function tackIntegral(n1, n2) {
         return parseInt(n1) === parseInt(n2);
     }
