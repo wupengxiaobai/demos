@@ -1,7 +1,7 @@
 ;
 (function () {
     var wishingWallConfig = {
-
+        wrapDom: document.getElementById('container')
     }
 
     initWish();
