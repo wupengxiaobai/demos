@@ -14,6 +14,8 @@
     var wishingWallConfig = {
         wrapDom: document.getElementById('container'),
         inpDom: document.getElementById('inp'),
+        vWidth: document.documentElement.clientWidth,
+        vHeight: document.documentElement.clientHeight,
         wishWidth: 220,
         wishHeight: 220,
         zIndex: 1
@@ -33,29 +35,23 @@
      * 触发改变卡片位置。卡片距离左右/上下边界保持平衡距离
      */
     function onResize() {
-        // 计算左边/右边比例值
-        var cds = wishingWallConfig.wrapDom.children;
-        for (var i = 0; i < cds.length; i++) {
-            var child = cds[i];
-            var style = getComputedStyle(child),
-                left = parseFloat(style.left),
-                top = parseFloat(style.top);
-            var right = document.documentElement.clientWidth - left - wishingWallConfig.wishWidth,
-                bottom = document.documentElement.clientHeight - top - wishingWallConfig.wishHeight - 50;
-            var lvX = left / right,
-                lvY = top / bottom;
-            child.setAttribute('lv', JSON.stringify({
-                lvX,
-                lvY
-            }))
-        }
         window.onresize = function () {
-            var cds = wishingWallConfig.wrapDom.children;
-            for (var i = 0; i < cds.length; i++) {
-                var child = cds[i];
-                child.style.left = JSON.parse(child.getAttribute('lv')).lvX / (JSON.parse(child.getAttribute('lv')).lvX + 1) * document.documentElement.clientWidth + 'px';
-                child.style.top = JSON.parse(child.getAttribute('lv')).lvY / (JSON.parse(child.getAttribute('lv')).lvY + 1) * (document.documentElement.clientHeight - 50) + 'px';
+            var wDisW = document.documentElement.clientWidth - wishingWallConfig.vWidth,
+                wDisH = document.documentElement.clientHeight - wishingWallConfig.vHeight;
+            for (var i = 0; i < wishingWallConfig.wrapDom.children.length; i++) {
+                var wishDom = wishingWallConfig.wrapDom.children[i];
+                var left = parseFloat(wishDom.style.left),
+                    right = document.documentElement.clientWidth - left - wishingWallConfig.wishWidth,
+                    newLeft = left + left / (left + right) * wDisW;
+                var top = parseFloat(wishDom.style.top),
+                    bottom = document.documentElement.clientHeight - top - wishingWallConfig.wishHeight,
+                    newTop = top + top / (top + bottom) * wDisH;
+
+                wishDom.style.top = newTop + 'px';
+                wishDom.style.left = newLeft + 'px';
             }
+            wishingWallConfig.vWidth = document.documentElement.clientWidth;
+            wishingWallConfig.vHeight = document.documentElement.clientHeight;
         }
     }
 
@@ -65,7 +61,7 @@
     function moveEvent() {
 
         /**
-         * 获取心愿卡片
+         * 获取心愿卡片节点
          */
         function getCurrentTarget(dom) {
             if (dom.className === "wish") {
@@ -150,7 +146,6 @@
         wish.appendChild(span);
         wishingWallConfig.wrapDom.appendChild(wish);
         wishingWallConfig.inpDom.value = "";
-
     };
 
 
@@ -158,7 +153,7 @@
      * 初始化愿望
      */
     function initWish() {
-        var wishArr = ["喜欢你是快乐的", "互相喜欢更是难得的"];
+        var wishArr = ["喜欢你, 想让你知道", "知道喜欢你, 你也喜欢我", "我屮艸芔茻"];
         wishArr.forEach(item => {
             createOneWish(item);
         })
