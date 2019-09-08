@@ -1,0 +1,70 @@
+#slide {
+    position: relative;
+    width: 520px;
+    height: 280px;
+    border: 2px solid #333;
+    margin: 0 auto;
+    /* overflow: hidden; */
+}
+
+#slide .imgs {
+    /* transition: 1s; */
+    /* width: calc(520px * 5); */
+}
+
+#slide .imgs img {
+    display: block;
+    width: 520px;
+    height: 280px;
+    float: left;
+}
+
+#slide .controls .prev,
+#slide .controls .next {
+    position: absolute;
+    top: 50%;
+    width: 35px;
+    height: 35px;
+    margin-top: -17.5px;
+    text-align: center;
+    line-height: 35px;
+    color: #fff;
+    background: rgba(0, 0, 0, .3);
+    cursor: pointer;
+}
+
+#slide .controls .prev {
+    left: 0px;
+    border-radius: 0 17px 17px 0;
+}
+
+#slide .controls .next {
+    right: 0px;
+    border-radius: 17px 0 0 17px;
+}
+
+#slide .dots {
+    position: absolute;
+    padding: 5px 10px;
+    height:12px;
+    bottom: 10px;
+    left: 50%;
+    background: rgba(255, 255, 255, .2);
+    border-radius: 12px;
+    transform: translate3d(-50%, -50%, 0);
+}
+
+#slide .dots span {
+    margin: 0 3px;
+    display: inline-block;
+    vertical-align: top;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+}
+
+#slide .dots span.active {
+    background: #f40;
+}
